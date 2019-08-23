@@ -135,8 +135,7 @@ function bp_visibility_activity_filter( $has_activities, $activities ) {
     
     foreach ( $activities->activities as $key => $activity ) {
 
-        /*
-        if( $bp_loggedin_user_id == $activity->user_id  ) 
+        if( $bp_loggedin_user_id == $activity->user_id  )
             continue;
 
         $visibility = bp_activity_get_meta( $activity->id, 'activity-privacy' );
@@ -232,7 +231,6 @@ function bp_visibility_activity_filter( $has_activities, $activities ) {
         }
      
         $remove_from_stream = apply_filters( 'bp_more_visibility_activity_filter', $remove_from_stream, $visibility, $activity);
-        */
 
         $remove_from_stream = bp_visibility_is_activity_invisible( $activity, $bp_loggedin_user_id, $is_super_admin );
         
