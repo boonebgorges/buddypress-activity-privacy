@@ -30,10 +30,16 @@ function bp_add_visibility_to_activity( $content, $user_id, $activity_id ) {
     $levels = bp_get_profile_activity_privacy_levels();
     $levels += bp_get_groups_activity_privacy_levels();
 
-    if( isset( $_POST['visibility'] ) && in_array( esc_attr( $_POST['visibility'] ), $levels ) )
-        $visibility = esc_attr($_POST['visibility']);
+	$level = '';
+	if ( isset( $_POST['visibility'] ) ) {
+		$level = wp_unslash( $_POST['visibility'] );
+	} elseif ( isset( $_POST['activity-privacy'] ) ) {
+		$level = wp_unslash( $_POST['activity-privacy'] );
+	}
 
-    bp_activity_update_meta( $activity_id, 'activity-privacy', $visibility );
+    if ( $level && in_array( $level, $levels, true ) ) {
+		bp_activity_update_meta( $activity_id, 'activity-privacy', $level );
+	}
 }
 add_action( 'bp_activity_posted_update', 'bp_add_visibility_to_activity', 10, 3 );
 
