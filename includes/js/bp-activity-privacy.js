@@ -248,6 +248,16 @@ jq(document).ready( function() {
 				500
 			);
 		});
+
+		jq(document).ajaxComplete(function(event, request, settings){
+			// Reinit - this is awful.
+			setTimeout(
+				function() {
+					jq('select.bp-ap-selectbox').customSelect();
+				},
+				250
+			);
+		});
 		//jq('select#activity-privacy').customStyle('1');
 		//jq('select.bp-ap-selectbox').customStyle('2');
 	}
