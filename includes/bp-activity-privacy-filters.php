@@ -4,7 +4,7 @@
  *
  * @package BP-Activity-Privacy
  */
- 
+
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
@@ -14,13 +14,13 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @param  [int] $bp_loggedin_user_id [description]
  * @param [boolean]$is_super_admin             [description]
  * @param [int]$bp_displayed_user_id             [description]
- * @return [boolean] 
+ * @return [boolean]
  */
 function bp_visibility_is_activity_invisible( $activity, $bp_loggedin_user_id, $is_super_admin ) {
 
-    if( ($bp_loggedin_user_id == $activity->user_id) || 
-        ($is_super_admin &&  bp_ap_is_admin_allowed_to_view_edit_privacy_levels()) 
-    ) 
+    if( ($bp_loggedin_user_id == $activity->user_id) ||
+        ($is_super_admin &&  bp_ap_is_admin_allowed_to_view_edit_privacy_levels())
+    )
     return false;
 
     $visibility = bp_activity_get_meta( $activity->id, 'activity-privacy' );
@@ -34,75 +34,75 @@ function bp_visibility_is_activity_invisible( $activity, $bp_loggedin_user_id, $
                 $remove_from_stream = true;
             break;
 
-        //My friends    
+        //My friends
         case 'friends' :
             if ( bp_is_active( 'friends' ) ) {
                 $is_friend = friends_check_friendship( $bp_loggedin_user_id, $activity->user_id );
                 if( !$is_friend )
                     $remove_from_stream = true;
             }
-            break;    
+            break;
 
-        //@Mentioned Only  
+        //@Mentioned Only
         case 'mentionedonly' :
             $usernames = bp_activity_find_mentions( $activity->content );
             $is_mentioned = array_key_exists( $bp_loggedin_user_id,  (array)$usernames );
 
             if( !$is_mentioned )
                 $remove_from_stream = true;
-            break;   
+            break;
 
-        //My friends in the group    
+        //My friends in the group
         case 'groupfriends' :
             if ( bp_is_active( 'friends' ) ) {
                 $is_friend = friends_check_friendship( $bp_loggedin_user_id, $activity->user_id );
-            } else 
+            } else
                  $is_friend = true;
 
-            if ( bp_is_active( 'groups' ) ) {     
+            if ( bp_is_active( 'groups' ) ) {
                 $group_is_user_member = groups_is_user_member( $bp_loggedin_user_id, $activity->item_id );
-            } else 
+            } else
                 return true;
 
             if( !$is_friend || !$group_is_user_member)
                 $remove_from_stream = true;
-            break; 
+            break;
 
-        //Only group members    
+        //Only group members
         case 'grouponly' :
             $group_is_user_member = groups_is_user_member( $bp_loggedin_user_id, $activity->item_id );
             if( !$group_is_user_member )
                 $remove_from_stream = true;
-            break;  
+            break;
 
-        //Only group moderators    
+        //Only group moderators
         case 'groupmoderators' :
             $group_is_user_mod = groups_is_user_mod( $bp_loggedin_user_id, $activity->item_id );
             if( !$group_is_user_mod )
                 $remove_from_stream = true;
-            break;  
+            break;
 
-        //Only group admins    
+        //Only group admins
         case 'groupadmins' :
             $group_is_user_admin = groups_is_user_admin( $bp_loggedin_user_id, $activity->item_id );
             if( !$group_is_user_admin )
                 $remove_from_stream = true;
-            break;  
+            break;
 
-        //Only Admins    
+        //Only Admins
         case 'adminsonly' :
             if( !$is_super_admin )
                 $remove_from_stream = true;
-            break;   
+            break;
 
-        //Only Me    
+        //Only Me
         case 'onlyme' :
             if( $bp_loggedin_user_id != $activity->user_id )
                 $remove_from_stream = true;
-            break;             
+            break;
 
         default:
-            //public 
+            //public
             break;
     }
 
@@ -114,7 +114,7 @@ function bp_visibility_is_activity_invisible( $activity, $bp_loggedin_user_id, $
             $remove_from_stream = false;
         }
     }
- 
+
     $remove_from_stream = apply_filters( 'bp_more_visibility_activity_filter', $remove_from_stream, $visibility, $activity);
 
     return $remove_from_stream;
@@ -128,11 +128,11 @@ function bp_visibility_is_activity_invisible( $activity, $bp_loggedin_user_id, $
  */
 function bp_visibility_activity_filter( $has_activities, $activities ) {
     global $bp;
-   
+
     $is_super_admin = is_super_admin();
     $bp_displayed_user_id = bp_displayed_user_id();
     $bp_loggedin_user_id = bp_loggedin_user_id();
-    
+
     foreach ( $activities->activities as $key => $activity ) {
 
         if( $bp_loggedin_user_id == $activity->user_id  )
@@ -140,7 +140,7 @@ function bp_visibility_activity_filter( $has_activities, $activities ) {
 
         $visibility = bp_activity_get_meta( $activity->id, 'activity-privacy' );
         $remove_from_stream = false;
-      
+
 
         switch ( $visibility ) {
             //Logged in users
@@ -149,75 +149,75 @@ function bp_visibility_activity_filter( $has_activities, $activities ) {
                     $remove_from_stream = true;
                 break;
 
-            //My friends    
+            //My friends
             case 'friends' :
                 if ( bp_is_active( 'friends' ) ) {
                     $is_friend = friends_check_friendship( $bp_loggedin_user_id, $activity->user_id );
                     if( !$is_friend )
                         $remove_from_stream = true;
                 }
-                break;    
+                break;
 
-            //@Mentioned Only  
+            //@Mentioned Only
             case 'mentionedonly' :
                 $usernames = bp_activity_find_mentions( $activity->content );
                 $is_mentioned = array_key_exists( $bp_loggedin_user_id,  (array)$usernames );
 
                 if( !$is_mentioned )
                     $remove_from_stream = true;
-                break;   
+                break;
 
-            //My friends in the group    
+            //My friends in the group
             case 'groupfriends' :
                 if ( bp_is_active( 'friends' ) ) {
                     $is_friend = friends_check_friendship( $bp_loggedin_user_id, $activity->user_id );
-                } else 
+                } else
                      $is_friend = true;
 
-                if ( bp_is_active( 'groups' ) ) {     
+                if ( bp_is_active( 'groups' ) ) {
                     $group_is_user_member = groups_is_user_member( $bp_loggedin_user_id, $activity->item_id );
-                } else 
+                } else
                     return true;
 
                 if( !$is_friend || !$group_is_user_member)
                     $remove_from_stream = true;
-                break; 
+                break;
 
-            //Only group members    
+            //Only group members
             case 'grouponly' :
                 $group_is_user_member = groups_is_user_member( $bp_loggedin_user_id, $activity->item_id );
                 if( !$group_is_user_member )
                     $remove_from_stream = true;
-                break;  
+                break;
 
-            //Only group moderators    
+            //Only group moderators
             case 'groupmoderators' :
                 $group_is_user_mod = groups_is_user_mod( $bp_loggedin_user_id, $activity->item_id );
                 if( !$group_is_user_mod )
                     $remove_from_stream = true;
-                break;  
+                break;
 
-            //Only group admins    
+            //Only group admins
             case 'groupadmins' :
                 $group_is_user_admin = groups_is_user_admin( $bp_loggedin_user_id, $activity->item_id );
                 if( !$group_is_user_admin )
                     $remove_from_stream = true;
-                break;  
+                break;
 
-            //Only Admins    
+            //Only Admins
             case 'adminsonly' :
                 if( !$is_super_admin )
                     $remove_from_stream = true;
-                break;   
+                break;
 
-            //Only Me    
+            //Only Me
             case 'onlyme' :
                 if( $bp_loggedin_user_id != $activity->user_id )
                     $remove_from_stream = true;
-                break;             
+                break;
 
             default:
-                //public 
+                //public
                 break;
         }
 
@@ -229,11 +229,11 @@ function bp_visibility_activity_filter( $has_activities, $activities ) {
                 $remove_from_stream = false;
             }
         }
-     
+
         $remove_from_stream = apply_filters( 'bp_more_visibility_activity_filter', $remove_from_stream, $visibility, $activity);
 
         $remove_from_stream = bp_visibility_is_activity_invisible( $activity, $bp_loggedin_user_id, $is_super_admin );
-        
+
         if ( $remove_from_stream && isset( $activities->activity_count ) ) {
             $activities->activity_count = $activities->activity_count - 1;
             unset( $activities->activities[$key] );
@@ -242,7 +242,7 @@ function bp_visibility_activity_filter( $has_activities, $activities ) {
 
     $activities_new = array_values( $activities->activities );
     $activities->activities = $activities_new;
-    
+
     return $has_activities;
 }
 add_action( 'bp_has_activities', 'bp_visibility_activity_filter', 10, 2 );
@@ -321,10 +321,10 @@ function bp_activity_privacy_member_latest_update( $update_content ){
 
         $bp_displayed_user_id = bp_displayed_user_id();
         $bp_loggedin_user_id = bp_loggedin_user_id();
-    
+
         $remove_from_stream = bp_visibility_is_activity_invisible( $activity, $bp_loggedin_user_id, $is_super_admin );
-      
-        if ($remove_from_stream) 
+
+        if ($remove_from_stream)
             return false;
     }
 
@@ -336,7 +336,7 @@ add_filter('get_user_metadata', 'bp_activity_privacy_latest_user_update',10, 3);
 function bp_activity_privacy_latest_user_update( $retval, $object_id, $meta_key ){
     if ($meta_key == 'bp_latest_update') {
         remove_filter('get_user_metadata', 'bp_activity_privacy_latest_user_update');
-        
+
         $is_super_admin = is_super_admin();
         $bp_displayed_user_id = bp_displayed_user_id();
         $bp_loggedin_user_id = bp_loggedin_user_id();
@@ -354,10 +354,10 @@ function bp_activity_privacy_latest_user_update( $retval, $object_id, $meta_key 
             $remove_from_stream = bp_visibility_is_activity_invisible( $activity, $bp_loggedin_user_id, $is_super_admin, $bp_displayed_user_id );
             if ($remove_from_stream) {
                 return false;
-            }   
+            }
          }
          return $retval;
-        
+
     }
 }
 
@@ -379,7 +379,7 @@ function bp_activity_privacy_override_allowed_tags($activity_allowedtags){
     $activity_allowedtags['div']['class'] = array();
     $activity_allowedtags['small']          = array();
     $activity_allowedtags['small']['style'] = array();
-    
+
     return $activity_allowedtags;
 }
 
