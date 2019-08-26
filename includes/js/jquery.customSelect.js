@@ -5,7 +5,7 @@
  *
  * Copyright 2013 Adam Coulombe
  * @license http://www.opensource.org/licenses/mit-license.html MIT License
- * @license http://www.gnu.org/licenses/gpl.html GPL2 License 
+ * @license http://www.gnu.org/licenses/gpl.html GPL2 License
  */
 (function ($) {
     'use strict';
@@ -33,16 +33,16 @@
                 customSelectIconInner.attr('class', currentSelected.attr('class'));
                 $select.attr('title', html);
                 customSelectSpanInner.html(html);
-                
+
                 if (currentSelected.attr('disabled')) {
                     customSelectSpan.addClass(getClass('DisabledOption'));
                 } else {
                     customSelectSpan.removeClass(getClass('DisabledOption'));
                 }
-                
+
                 setTimeout(function () {
                     customSelectSpan.removeClass(getClass('Open'));
-                    $(document).off('mouseup.customSelect');                 
+                    $(document).off('mouseup.customSelect');
                 }, 60);
             },
             getClass = function(suffix){
@@ -73,15 +73,15 @@
                     .addClass('hasCustomSelect')
                     .on('render.customSelect', function () {
                         changed($select,customSelectSpan);
-                        $select.css('width','');	
-                        
-                         // fix  click issue when #whats-new-options is hidden (since bp 2.4.0) outerWidth = 0 
-                        var whatsNewOptionsIsHidden = false;       
+                        $select.css('width','');
+
+                         // fix  click issue when #whats-new-options is hidden (since bp 2.4.0) outerWidth = 0
+                        var whatsNewOptionsIsHidden = false;
                         if($select.attr('id') == 'activity-privacy' && $("#whats-new-options").is(":hidden")){
                             $("#whats-new-options").css('display','block');
-                            whatsNewOptionsIsHidden = true;  
+                            whatsNewOptionsIsHidden = true;
                             console.log("whatsNewOptionsIsHidden true");
-                       
+
                         }
 
                         var selectBoxWidth = parseInt($select.outerWidth(), 10) -
@@ -92,7 +92,7 @@
                         customSelectSpan.css({
                             display: 'inline-block'
                         });
-                        
+
                         var selectBoxHeight = customSelectSpan.outerHeight();
 
                         if ($select.attr('disabled')) {
@@ -102,7 +102,7 @@
                         }
 
                         customSelectInnerSpan.css({
-                            
+
                             display: 'inline-block'
                         });
 
@@ -115,7 +115,7 @@
                             fontSize:             customSelectSpan.css('font-size')
                         });
 
-                        // reset #what-news-options display 
+                        // reset #what-news-options display
                         if(whatsNewOptionsIsHidden) {
                             $("#whats-new-options").css('display','none');
                         }
@@ -139,7 +139,7 @@
                         customSelectSpan.removeClass(getClass('Changed'));
                     })
                     .on('mouseup.customSelect', function (e) {
-                        
+
                         if( !customSelectSpan.hasClass(getClass('Open'))){
                             // if FF and there are other selects open, just apply focus
                             if($('.'+getClass('Open')).not(customSelectSpan).length>0 && typeof InstallTrigger !== 'undefined'){

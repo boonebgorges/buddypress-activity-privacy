@@ -2,21 +2,21 @@ if ( typeof jq == "undefined" )
 	var jq = jQuery;
 
 jq(document).ready( function() {
-	
+
 	jq.fn.extend({
         customStyle : function(options) {
 
 	        if(!jq.browser.msie || (jq.browser.msie&&jq.browser.version>6)) {
 	            return this.each(function() {
 	            	if ( jq(this).data('customStyle') == undefined ) {
-	            	
-		            	jq(this).data('customStyle', true);	
+
+		            	jq(this).data('customStyle', true);
 		                var currentSelected = jq(this).find(':selected');
 
 		                jq(this).after('<span class="customStyleSelectBox'+options+'"><i class="'+currentSelected.attr("class")+'"></i><span class="customStyleSelectBoxInner'+options+'">'+currentSelected.text()+'</span><i class="fa fa-caret-down"></i></span>').css({position:'absolute', opacity:0,fontSize:jq(this).next().css('font-size')});
 		                var selectBoxSpan = jq(this).next();
 
-		                var selectBoxWidth = parseInt(jq(this).width()) - parseInt(selectBoxSpan.css('padding-left')) -parseInt(selectBoxSpan.css('padding-right'));            
+		                var selectBoxWidth = parseInt(jq(this).width()) - parseInt(selectBoxSpan.css('padding-left')) -parseInt(selectBoxSpan.css('padding-right'));
 		                var selectBoxSpanInner = selectBoxSpan.find(':first-child').next();
 		                selectBoxSpan.css({display:'inline-block'});
 		               //alert(selectBoxSpan.width());
@@ -34,24 +34,24 @@ jq(document).ready( function() {
 	         });
 	        }
     }
-    }); 
-    
+    });
+
 
 	jq('body').on('change', '.bp-ap-selectbox',  function(event) {
 		var target = jq(event.target);
     	var parent = target.closest('.activity-item');
     	var parent_id = parent.attr('id').substr( 9, parent.attr('id').length );
-	
+
 		if (typeof bp_get_cookies == 'function')
 			var cookie = bp_get_cookies();
-    	else 
+    	else
     		var cookie = encodeURIComponent(document.cookie);
 
         jq.post( ajaxurl, {
 			action: 'update_activity_privacy',
 			'cookie': cookie,
 			'visibility': jq(this).val(),
-			'id': parent_id 
+			'id': parent_id
 		},
 
 		function(response) {
@@ -84,8 +84,6 @@ jq(document).ready( function() {
 		});
 	}
 
-    
-
 	jq('span#activity-visibility').prependTo('div#whats-new-submit');
 	jq("input#aw-whats-new-submit").off("click");
 
@@ -115,7 +113,7 @@ jq(document).ready( function() {
 		}
 		jq(this).data('selected',item_id);
 	});
-	
+
 	/* New posts */
 	jq("input#aw-whats-new-submit").on('click', function() {
 		var button = jq(this);
@@ -144,7 +142,7 @@ jq(document).ready( function() {
 
 		if (typeof bp_get_cookies == 'function')
 			var cookie = bp_get_cookies();
-    	else 
+    	else
     		var cookie = encodeURIComponent(document.cookie);
 
 		jq.post( ajaxurl, {
@@ -223,7 +221,7 @@ jq(document).ready( function() {
 				})
 				jq( '#whats-new-options' ).slideUp();
 			}
-			
+
 			jq("#aw-whats-new-submit").prop("disabled", true).removeClass('loading');
 
 			//reset the privacy selection
