@@ -239,6 +239,15 @@ jq(document).ready( function() {
 	if(visibility_levels.custom_selectbox) {
 		jq('select#activity-privacy').customSelect();
 		jq('select.bp-ap-selectbox').customSelect();
+
+		jq('#bp-nouveau-activity-form #whats-new').on('focus',function(){
+			setTimeout(
+				function() {
+					jq('select#activity-privacy').customSelect();
+				},
+				500
+			);
+		});
 		//jq('select#activity-privacy').customStyle('1');
 		//jq('select.bp-ap-selectbox').customStyle('2');
 	}

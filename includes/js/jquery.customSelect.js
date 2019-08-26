@@ -57,9 +57,10 @@
                     customIconInnerSpan = $('<i />'),
                     dropdownIcon = $('<i class="fa fa-caret-down"></i>'),
                     customSelectSpan = $('<span />');
-  
-                $select.after(customSelectSpan.append(customIconInnerSpan).append(customSelectInnerSpan).append(dropdownIcon));
-                
+
+								var selectEl = customSelectSpan.append(customIconInnerSpan).append(customSelectInnerSpan).append(dropdownIcon);
+                $select.after( selectEl );
+
                 customSelectSpan.addClass(prefix);
 
                 if (options.mapClass) {
